@@ -26,7 +26,7 @@ full e-commerce store) without starting over.
 |-----------------|-----------------------------------------------------------------|
 | Framework       | **Next.js (App Router, TypeScript)**                            |
 | Styling         | **Tailwind CSS**, mobile-first                                  |
-| Hosting         | **Cloudflare Pages** (`@cloudflare/next-on-pages`, edge runtime)|
+| Hosting         | **Cloudflare Workers** (`@opennextjs/cloudflare` adapter)<sup>†</sup>|
 | Payments (now)  | **Mock provider** — simulate the redirect, no real money        |
 | Payments (later)| **Flow** (flow.cl) — real impl slots behind same interface      |
 | Content (now)   | **Placeholders** — hardcoded product config + images in /public |
@@ -34,7 +34,14 @@ full e-commerce store) without starting over.
 | Media (later)   | **Backblaze B2** for images                                     |
 | Buy flow        | Product page → **shipping form** → order summary → pay          |
 | Language/Money  | **Spanish (Chile) / CLP** (`$12.990`), Chile regiones + comunas |
-| Delivery        | **Live URL** on Cloudflare Pages the client opens on their phone |
+| Delivery        | **Live URL** on Cloudflare Workers the client opens on their phone |
+
+<sup>†</sup> Originally specified as Cloudflare Pages + `@cloudflare/next-on-pages`. That
+adapter is deprecated/unmaintained (no updates since 2024, incompatible with
+Next.js 15+), so this was swapped for the current Cloudflare-recommended path
+(confirmed 2026-08-15) — `@opennextjs/cloudflare`, deploying to Cloudflare
+Workers. Outcome is the same: a free-tier live URL, git-based deploys. Update
+this note if you re-verify and the guidance has changed again.
 
 ---
 
@@ -205,9 +212,9 @@ Simulated payment UI clearly labeled as a demo. "Pagar" → confirm → `/pago/e
 
 ### Phase 0 — Scaffold & deploy skeleton  *(do first, verify live)*
 - `create-next-app` (TS, App Router, Tailwind, ESLint, `src/`).
-- Add `@cloudflare/next-on-pages`; configure `next.config.mjs` + edge runtime
-  where required; add build/deploy scripts; `wrangler.toml`/Pages config.
-- Init GitHub repo; **deploy a placeholder page to Cloudflare Pages and
+- Add `@opennextjs/cloudflare`; configure `open-next.config.ts` + `wrangler.jsonc`
+  where required; add build/deploy scripts.
+- Init GitHub repo; **deploy a placeholder page to Cloudflare Workers and
   confirm the live URL loads** before building further.
 - Add `.env.example`, `lib/env.ts`, base `<html lang="es">` layout.
 - **Checkpoint:** live URL renders "Hello" on mobile.
