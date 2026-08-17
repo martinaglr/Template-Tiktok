@@ -1,10 +1,28 @@
-export default function Home() {
+import { productRepository } from "@/lib/container";
+import { SiteHeader } from "@/components/site-header";
+import { Hero } from "@/components/hero";
+import { Benefits } from "@/components/benefits";
+import { Gallery } from "@/components/gallery";
+import { Reviews } from "@/components/reviews";
+import { TrustRow } from "@/components/trust-row";
+import { StickyCta } from "@/components/sticky-cta";
+import { ViewContentTracker } from "@/components/view-content-tracker";
+
+export default async function Home() {
+  const product = await productRepository.getFeatured();
+
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-2 p-8 text-center">
-      <h1 className="text-2xl font-semibold">Hello 👋</h1>
-      <p className="text-zinc-600">
-        Scaffold desplegado. La landing de producto llega en la Fase 2.
-      </p>
-    </div>
+    <>
+      <SiteHeader productName={product.name} />
+      <main className="mx-auto w-full max-w-3xl flex-1 pb-24 sm:pb-8">
+        <Hero product={product} />
+        <Benefits items={product.benefits} />
+        <Gallery images={product.images} alt={product.name} />
+        <Reviews />
+        <TrustRow />
+      </main>
+      <StickyCta price={product.price} />
+      <ViewContentTracker product={product} />
+    </>
   );
 }

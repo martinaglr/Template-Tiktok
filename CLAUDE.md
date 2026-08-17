@@ -124,7 +124,7 @@ The whole point: **tonight's mock == tomorrow's real thing, same shape.**
 │  │  │  └─ flow.ts       # FlowPaymentProvider (STUB: signatures + TODOs)
 │  │  ├─ orders/
 │  │  │  ├─ types.ts      # Order model + OrderRepository interface
-│  │  │  └─ memory.ts     # in-memory/ephemeral store for the demo
+│  │  │  └─ cookie.ts     # ephemeral store for the demo (httpOnly cookie)<sup>‡</sup>
 │  │  └─ media/
 │  │     ├─ types.ts      # MediaSource interface
 │  │     └─ local.ts      # LocalMediaSource (/public)
@@ -133,6 +133,14 @@ The whole point: **tonight's mock == tomorrow's real thing, same shape.**
 ```
 
 Adjust names sensibly if needed, but **keep the seams**.
+
+<sup>‡</sup> `orders/memory.ts` (a module-scope `Map`) was replaced with
+`orders/cookie.ts` during Phase 4: Next.js bundles route handlers and page
+components as separate module graphs, so a plain in-memory `Map` written in
+`POST /api/orders` was invisible to `/pago/[orderId]`'s page render — even in
+single-process `next dev`, confirmed by reproducing with curl. The order now
+rides in an httpOnly cookie instead. Same `OrderRepository` interface, still
+ephemeral/demo-only, still swapped for D1 later.
 
 ---
 
@@ -282,3 +290,13 @@ Simulated payment UI clearly labeled as a demo. "Pagar" → confirm → `/pago/e
   whole point.
 - Ask before adding a database or any paid service.
 - Verify each Phase checkpoint on the **live URL**, not just locally.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
