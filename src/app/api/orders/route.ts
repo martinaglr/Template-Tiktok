@@ -52,5 +52,15 @@ export async function POST(request: Request) {
 
   await orderRepository.updateStatus(orderId, "pending", providerRef);
 
-  return NextResponse.json({ redirectUrl });
+  const response = NextResponse.json({ redirectUrl });
+  // Lightweight ownership check for /pago/exito: which order this browser
+  // is allowed to see never comes from a query string alone (anyone could
+  // enumerate ids), only from this httpOnly cookie set at creation time.
+  response.cookies.set("last_order_id", orderId, {
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 60 * 60,
+    path: "/",
+  });
+  return response;
 }

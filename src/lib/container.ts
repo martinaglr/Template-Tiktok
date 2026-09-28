@@ -3,7 +3,7 @@ import { StaticProductRepository } from "./products/static";
 import type { PaymentProvider } from "./payments/types";
 import { MockPaymentProvider } from "./payments/mock";
 import type { OrderRepository } from "./orders/types";
-import { CookieOrderRepository } from "./orders/cookie";
+import { D1OrderRepository } from "./orders/d1";
 import type { MediaSource } from "./media/types";
 import { LocalMediaSource } from "./media/local";
 
@@ -14,5 +14,5 @@ import { LocalMediaSource } from "./media/local";
  */
 export const productRepository: ProductRepository = new StaticProductRepository();
 export const paymentProvider: PaymentProvider = new MockPaymentProvider();
-export const orderRepository: OrderRepository = new CookieOrderRepository();
+export const orderRepository: OrderRepository = new D1OrderRepository();
 export const mediaSource: MediaSource = new LocalMediaSource();

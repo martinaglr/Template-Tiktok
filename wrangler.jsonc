@@ -7,5 +7,12 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "template-tiktok-orders",
+      "database_id": "f919f04b-d512-4c35-997c-3eb8dd8617c5"
+    }
+  ]
 }

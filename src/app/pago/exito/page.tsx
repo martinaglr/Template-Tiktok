@@ -1,12 +1,15 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { orderRepository } from "@/lib/container";
 import { formatCLP } from "@/lib/money";
 import { PurchaseTracker } from "@/components/purchase-tracker";
 
-export default async function PagoExitoPage(props: PageProps<"/pago/exito">) {
-  const searchParams = await props.searchParams;
-  const orderId =
-    typeof searchParams.orderId === "string" ? searchParams.orderId : null;
+export default async function PagoExitoPage() {
+  // Never read the order id from the query string alone — that would let
+  // anyone enumerate other people's orders. The only valid source is the
+  // httpOnly cookie set by POST /api/orders for this browser.
+  const store = await cookies();
+  const orderId = store.get("last_order_id")?.value ?? null;
   const order = orderId ? await orderRepository.getById(orderId) : null;
 
   return (
