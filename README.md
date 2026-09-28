@@ -20,7 +20,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Env vars
 
-See `.env.example` for the full list. Two things worth knowing:
+See `.env.example` for the full list. Three things worth knowing:
 
 - All `NEXT_PUBLIC_*` vars (site URL, pixel IDs) are **baked in at build
   time**, not read at runtime. Set them before running `npm run deploy`, not
@@ -29,6 +29,14 @@ See `.env.example` for the full list. Two things worth knowing:
 - Pixel IDs are optional. With them empty, `PixelScripts`
   (`components/pixel-scripts.tsx`) renders nothing and `lib/analytics.ts`
   just logs events to the console in dev — safe to ship without them.
+- **Server-side secrets (Flow, Resend, CAPI tokens) go in `.dev.vars`, not
+  `.env.local`.** `.dev.vars` is what `wrangler`/`@opennextjs/cloudflare`
+  reads for Worker bindings in local dev and preview — this is the single
+  most common local-dev trap on this stack, since Next.js itself only ever
+  looks at `.env*`. `.dev.vars` is gitignored; copy the secret vars from
+  `.env.example` into it locally. `NEXT_PUBLIC_*` vars still belong in
+  `.env.local` since they're a Next.js build-time concern, not a Worker
+  binding.
 
 ## Deploying
 

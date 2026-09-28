@@ -18,7 +18,7 @@ declare global {
  * callers don't need to change when pixels go live.
  */
 export function trackEvent(event: PixelEvent, params?: Record<string, unknown>) {
-  if (!env.metaPixelId && !env.tiktokPixelId) {
+  if (!env.pixels.metaPixelId && !env.pixels.tiktokPixelId) {
     if (process.env.NODE_ENV === "development") {
       console.debug("[analytics]", event, params);
     }
